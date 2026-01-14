@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Topics</title>
+  <link rel="stylesheet" href="topic.css">
+</head>
+<body>
+
+<header class="page-header">
+  <h1>Important Topics</h1>
+  <p>Grouped by repetition frequency</p>
+  <button class="pdf-btn" onclick="window.print()">Export PDF</button>
+</header>
+
+<main class="results-container" id="resultsContainer"></main>
+
+<script>
+function showLoader(button) {
+  button.classList.add("loading");
+  button.querySelector(".loader").style.display = "inline-block";
+}
+function hideLoader(button) {
+  button.classList.remove("loading");
+  button.querySelector(".loader").style.display = "none";
+}
+function toggleOutline(button) {
+  const outline = button.nextElementSibling;
+  const topic = button.closest(".topic-card")
+    .querySelector(".topic-header h2").textContent;
+  if (!outline.dataset.loaded) {
+    showLoader(button);
+    fetch("http://127.0.0.1:8000/api/summarize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ topic })
+    })
+    .then(res => res.json())
+    .then(data => {
+      outline.innerHTML = `
+        <h4>Description</h4>
+        <p>${data.summary || "No content found."}</p>
+      `;
+      outline.dataset.loaded = "true";
+      outline.classList.add("show");
+      button.childNodes[0].textContent = "Hide Description";
+    })
+    .catch(() => {
+      outline.innerHTML = "<p>Failed to load summary.</p>";
+      outline.classList.add("show");
+    })
+    .finally(() => hideLoader(button));
+    return;
+  }
+  outline.classList.toggle("show");
+  button.childNodes[0].textContent =
+    outline.classList.contains("show")
+      ? "Hide Description"
+      : "View Description";
+}
+function toggleSection(button) {
+  const section = button.closest(".repetition-section");
+  const outlines = section.querySelectorAll(".outline");
+  const showAll = button.dataset.state !== "shown";
+  showLoader(button);
+  requestAnimationFrame(() => {
+    outlines.forEach(outline => {
+      outline.classList.toggle("show", showAll);
+    });
+    button.childNodes[0].textContent =
+      showAll ? "Hide All Descriptions" : "Show All Descriptions";
+    button.dataset.state = showAll ? "shown" : "hidden";
+    hideLoader(button);
+  });
+}
+const params = new URLSearchParams(window.location.search);
+const jobId = params.get("job_id");
+if (!jobId) {
+  document.body.innerHTML = "<h2>Invalid job ID</h2>";
+  throw new Error("job_id missing");
+}
+fetch(`http://127.0.0.1:8000/api/topic/${jobId}`)
+  .then(res => res.json())
+  .then(data => renderTopics(data.groups))
+  .catch(() => alert("Failed to load topics"));
+function renderTopics(groups) {
+  const container = document.getElementById("resultsContainer");
+  const sectionMap = {
+    "5_plus": "Repeated 5+ Times",
+    "3_4": "Repeated 3–4 Times",
+    "2_times": "Repeated Twice"
+  };
+  for (const key in groups) {
+    const topics = groups[key];
+    if (!topics?.length) continue;
+    const section = document.createElement("section");
+    section.className = "repetition-section";
+    section.innerHTML = `
+      <div class="repetition-header">
+        <h2>${sectionMap[key]}</h2>
+        <button class="group-toggle-btn" data-state="hidden"
+          onclick="toggleSection(this)">
+          Show All Descriptions
+          <span class="loader"></span>
+        </button>
+      </div>
+    `;
+    topics.forEach(item => {
+      const card = document.createElement("section");
+      card.className = "topic-card";
+      card.innerHTML = `
+        <div class="topic-header">
+          <h2>${item.topic}</h2>
+        </div>
+        <button class="outline-btn" onclick="toggleOutline(this)">
+          View Description
+          <span class="loader"></span>
+        </button>
+        <div class="outline">
+          <h4>Suggested Structure</h4>
+          <ul>
+            ${item.outline.map(p => `<li>${p}</li>`).join("")}
+          </ul>
+        </div>
+      `;
+      section.appendChild(card);
+    });
+    container.appendChild(section);
+  }
+}
+</script>
+
+</body>
+</html>

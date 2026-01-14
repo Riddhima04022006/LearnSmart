@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-multipart
+easyocr 
+pillow
+rapidfuzz
+spacy
+numpy
+scikit-learn
+wikipedia

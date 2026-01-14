@@ -1,0 +1,5 @@
+.venv/
+backend/venv/
+**/__pycache__/
+garbage.txt
+backend/storage/temp_uploads/*
