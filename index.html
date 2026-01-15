@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnSmart</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header>
+  <div class="logo">Learn<span>Smart</span></div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="blob-ring">
+    <span></span><span></span><span></span>
+    <span></span><span></span><span></span>
+  </div>
+  <div class="hero-content">
+    <div class="text">
+      <h1>Learn Smarter, Not Harder.</h1>
+      <p>Join thousands of learners discovering a simpler, more effective way to study.</p>
+      <button onclick="openUploadModal()">Start Learning</button>
+    </div>
+    <div class="image">
+      <img src="Girl illutration.png" alt="learning illustration">
+    </div>
+  </div>
+  <div class="curve"></div>
+</section>
+
+<section class="features">
+  <h2>Why Choose LearnSmart?</h2>
+  <div class="feature-cards">
+    <div class="card">
+      <img src="feature1.png">
+      <h3>Reduced Cognitive Load</h3>
+      <p>Helps first-generation learners by consolidating recurring questions.</p>
+    </div>
+    <div class="card">
+      <img src="feature2.png">
+      <h3>AI-Inclusive Workflow</h3>
+      <p>Designed for students who struggle with AI tools.</p>
+    </div>
+    <div class="card">
+      <img src="feature3.png">
+      <h3>Neuro-Inclusive Learning</h3>
+      <p>Supports learners with ADHD and dysgraphia.</p>
+    </div>
+  </div>
+</section>
+
+<div id="uploadModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeUploadModal()">&times;</span>
+    <h2>Upload Question Images</h2>
+    <label for="imageInput">
+      <div class="upload-box">
+        <span id="fileNameDisplay">Choose Files</span>
+      </div>
+    </label>
+    <input type="file" id="imageInput" multiple accept="image/*" onchange="updateFileName()">
+    <p class="hint">Upload scanned question papers or images.</p>
+    <textarea id="syllabusText" rows="5" placeholder="Enter syllabus details here..."></textarea>
+    <button onclick="submitImages()">Analyze</button>
+  </div>
+</div>
+
+<div id="loadingOverlay">
+  <div class="loader"></div>
+  <p>Analyzing your materials...</p>
+</div>
+
+<footer>
+  <div class="footer-content">
+    <div class="brand">Learn<span>Smart</span></div>
+    <p>"Knowledge grows best when shared."</p>
+  </div>
+  <p class="copy">&copy; 2026 LearnSmart. All Rights Reserved.</p>
+</footer>
+
+<script>
+function openUploadModal() {
+  document.getElementById("uploadModal").style.display = "flex";
+}
+function closeUploadModal() {
+  document.getElementById("uploadModal").style.display = "none";
+}
+function updateFileName() {
+  const input = document.getElementById("imageInput");
+  const display = document.getElementById("fileNameDisplay");
+  display.innerText = input.files.length ? input.files.length + " files selected" : "Choose Files";
+}
+function submitImages() {
+  const input = document.getElementById("imageInput");
+  const syllabusText = document.getElementById("syllabusText").value;
+  const files = input.files;
+  if (files.length === 0 && syllabusText.trim() === "") {
+    alert("Please select at least one image or enter syllabus details.");
+    return;
+  }
+  document.getElementById("loadingOverlay").style.display = "flex";
+  const formData = new FormData();
+  for (let i = 0; i < files.length; i++) formData.append("files", files[i]);
+  if (syllabusText.trim()) formData.append("syllabusText", syllabusText);
+  fetch("https://Riddhima04022006-learnsmart-backend.hf.space/upload", {
+    method: "POST",
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => window.location.href = `topic.html?job_id=${data.job_id}`)
+  .catch(() => {
+    document.getElementById("loadingOverlay").style.display = "none";
+    alert("Failed to upload.");
+  });
+}
+</script>
+
+</body>
+</html>

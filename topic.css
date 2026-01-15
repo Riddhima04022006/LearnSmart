@@ -1,0 +1,135 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+body {
+  background: #e1c6a1;
+  color: #222;
+}
+
+.page-header {
+  background: linear-gradient(135deg,#fee0b4 0%,#f1dad3 60%,#fceeee 100%);
+  text-align: center;
+  padding: 40px 20px;
+}
+.page-header h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.page-header p {
+  font-size: 0.95rem;
+  color: #6b4636;
+}
+
+.pdf-btn {
+  margin-top: 15px;
+  background: #b4846c;
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.results-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 40px;
+  background: #e6cdb3;
+  border-radius: 30px;
+}
+
+.repetition-section {
+  background: #f1dbd4;
+  padding: 30px;
+  border-radius: 25px;
+  margin-bottom: 35px;
+}
+
+.repetition-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+.repetition-header h2 {
+  font-size: 1.3rem;
+  color: #6b4636;
+  font-weight: 600;
+}
+
+.group-toggle-btn,
+.outline-btn {
+  background: #b4846c;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+}
+.group-toggle-btn:hover,
+.outline-btn:hover {
+  background: #9f6f58;
+}
+.loading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.loader {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #fff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  margin-left: 8px;
+  animation: spin 0.7s linear infinite;
+  display: none;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.topic-card {
+  background: white;
+  margin-bottom: 22px;
+  border-radius: 15px;
+  padding: 25px;
+}
+.topic-header h2 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.outline {
+  display: none;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #f1dad3;
+}
+.outline.show { display: block; }
+.outline h4 {
+  margin: 10px 0 6px;
+  color: #6b4636;
+  font-size: 0.95rem;
+}
+.outline ul { padding-left: 20px; }
+.outline ul li { font-size: 0.9rem; }
+
+@media print {
+  body { background: white; }
+  .outline { display: block !important; }
+  .outline-btn,
+  .group-toggle-btn,
+  .pdf-btn {
+    display: none;
+  }
+}
