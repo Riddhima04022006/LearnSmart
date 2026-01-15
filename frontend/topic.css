@@ -8,9 +8,34 @@ body {
   background: #e1c6a1;
   color: #222;
 }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2.5rem;
+  background-color: #f7e2d5;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(90,59,46,0.15);
+}
 
+.logo {
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: #5a3b2e;
+}
+.logo span { color: #8f6654; }
+
+nav a {
+  margin: 0 0.9rem;
+  text-decoration: none;
+  color: #3f2b24;
+  font-weight: 500;
+}
+nav a:hover { color: #8f6654; }
 .page-header {
-  background: linear-gradient(135deg,#fee0b4 0%,#f1dad3 60%,#fceeee 100%);
+  background: linear-gradient(135deg,#edd2aa 0%,#eac9bf 60%,#ebcaca 100%);
   text-align: center;
   padding: 40px 20px;
 }
