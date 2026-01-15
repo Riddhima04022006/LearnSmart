@@ -110,7 +110,7 @@ function submitImages() {
   const formData = new FormData();
   for (let i = 0; i < files.length; i++) formData.append("files", files[i]);
   if (syllabusText.trim()) formData.append("syllabusText", syllabusText);
-  fetch("http://127.0.0.1:8000/upload", {
+  fetch("https://Riddhima04022006-learnsmart-backend.hf.space/upload", {
     method: "POST",
     body: formData
   })

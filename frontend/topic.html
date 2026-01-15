@@ -30,7 +30,7 @@ function toggleOutline(button) {
     .querySelector(".topic-header h2").textContent;
   if (!outline.dataset.loaded) {
     showLoader(button);
-    fetch("http://127.0.0.1:8000/api/summarize", {
+    fetch("https://riddhima04022006-learnsmart-backend.hf.space/api/summarize", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ topic })
@@ -79,9 +79,16 @@ if (!jobId) {
   document.body.innerHTML = "<h2>Invalid job ID</h2>";
   throw new Error("job_id missing");
 }
-fetch(`http://127.0.0.1:8000/api/topic/${jobId}`)
+fetch(`https://riddhima04022006-learnsmart-backend.hf.space/api/topic/${jobId}`)
   .then(res => res.json())
-  .then(data => renderTopics(data.groups))
+  .then(data => {
+    renderTopics(data.groups);
+    fetch(`https://riddhima04022006-learnsmart-backend.hf.space/api/cleanup/${jobId}`, {
+      method: "POST"
+    }).catch(err => {
+      console.error("Cleanup failed:", err);
+    });
+  })
   .catch(() => alert("Failed to load topics"));
 function renderTopics(groups) {
   const container = document.getElementById("resultsContainer");
@@ -128,6 +135,13 @@ function renderTopics(groups) {
     container.appendChild(section);
   }
 }
+window.addEventListener("beforeunload", () => {
+  if (!jobId) return;
+
+  navigator.sendBeacon(
+    `https://riddhima04022006-learnsmart-backend.hf.space/api/cleanup/${jobId}`
+  );
+});
 </script>
 
 </body>
